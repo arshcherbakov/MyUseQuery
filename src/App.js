@@ -13,7 +13,7 @@ const useUpdateEffect = (argsParams, fnSecondRendering) => {
   }, argsParams);
 };
 
-const useQuery = ({ argsParams, queryFn }) => {
+const useQuery = ({ argsParams = [], queryFn }) => {
   const [data, setData] = useState([]);
   const [isPending, setIsPending] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // можно сделать бачинг isPending, isLoading, isError
@@ -54,7 +54,7 @@ const useQuery = ({ argsParams, queryFn }) => {
 };
 
 const App = () => {
-  const [isPop, setIsPending] = useState(false);
+  const [isPop, setIsPop] = useState(false);
   const { isPending, isError, data, error, isLoading } = useQuery({
     argsParams: [isPop],
     queryFn: () =>
@@ -72,7 +72,7 @@ const App = () => {
       ) : (
         data.map((pokemon, index) => <p key={index}>{pokemon.name}</p>)
       )}
-      <button onClick={() => setIsPending(true)}>Проверить загрузку</button>
+      <button onClick={() => setIsPop(true)}>Проверить загрузку</button>
     </div>
   );
 };

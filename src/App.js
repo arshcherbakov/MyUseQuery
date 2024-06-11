@@ -4,17 +4,18 @@ import "./App.css";
 const useQuery = ({ argsParams, queryFn }) => {
   const [data, setData] = useState([]);
   const [isPending, setIsPending] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // можно сделать бачинг isPending, isLoading, isError
+  const [isLoading, setIsLoading] = useState(true); // можно сделать бачинг isPending, isLoading, isError
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    setIsLoading(true);
-  }, []);
+  const [renderFerst, setRenderFerst] = useState(true);
 
   useEffect(() => {
-    setIsPending(true);
-    setIsLoading(false);
+    if (renderFerst) {
+      setRenderFerst(false);
+    } else {
+      setIsLoading(false);
+    }
 
     const getData = async () => {
       try {
@@ -43,11 +44,14 @@ const useQuery = ({ argsParams, queryFn }) => {
 };
 
 const App = () => {
+  const [isPop, setIsPending] = useState(false);
   const { isPending, isError, data, error, isLoading } = useQuery({
-    argsParams: [],
+    argsParams: [isPop],
     queryFn: () =>
       fetch(" https://pokeapi.co/api/v2/pokemon?limit=10&offset=0"),
   });
+
+  console.log(isLoading);
 
   return (
     <div className="App">
@@ -58,6 +62,7 @@ const App = () => {
       ) : (
         data.map((pokemon, index) => <p key={index}>{pokemon.name}</p>)
       )}
+      <button onClick={() => setIsPending(true)}>Проверить загрузку</button>
     </div>
   );
 };

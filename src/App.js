@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 
 const useQuery = ({ argsParams, queryFn }) => {
@@ -8,11 +8,11 @@ const useQuery = ({ argsParams, queryFn }) => {
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState("");
 
-  const [renderFerst, setRenderFerst] = useState(true);
+  const renderFerst = useRef(true);
 
   useEffect(() => {
-    if (renderFerst) {
-      setRenderFerst(false);
+    if (renderFerst.current) {
+      renderFerst.current = false;
     } else {
       setIsLoading(false);
     }

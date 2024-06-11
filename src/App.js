@@ -1,6 +1,18 @@
 import { useEffect, useState, useRef } from "react";
 import "./App.css";
 
+const useUpdateEffect = (argsParams, fnSecondRendering) => {
+  const renderFirst = useRef(true);
+
+  useEffect(() => {
+    if (renderFirst.current) {
+      renderFirst.current = false;
+    } else {
+      fnSecondRendering(false);
+    }
+  }, argsParams);
+};
+
 const useQuery = ({ argsParams, queryFn }) => {
   const [data, setData] = useState([]);
   const [isPending, setIsPending] = useState(false);
@@ -8,25 +20,23 @@ const useQuery = ({ argsParams, queryFn }) => {
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState("");
 
-  const renderFerst = useRef(true);
+  const handleLoading = (isLloading) => {
+    setIsLoading(isLloading);
+  };
+
+  useUpdateEffect(argsParams, handleLoading);
 
   useEffect(() => {
-    if (renderFerst.current) {
-      renderFerst.current = false;
-    } else {
-      setIsLoading(false);
-    }
-
     const getData = async () => {
       try {
         const response = await queryFn();
         const data = await response.json();
 
         setData(data.results);
-        setIsPending(false);
       } catch (error) {
         setIsError(true);
         setError(error);
+      } finally {
         setIsPending(false);
       }
     };
